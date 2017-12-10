@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AddTodo extends AppCompatActivity {
+    DatabaseToDo db;
     EditText dateEditText;
     EditText timeEditText;
     Calendar calendar = Calendar.getInstance();
@@ -30,6 +31,8 @@ public class AddTodo extends AppCompatActivity {
         setContentView(R.layout.activity_add_todo);
         dateEditText = (EditText) findViewById(R.id.date);
         timeEditText = (EditText) findViewById(R.id.editTime);
+        db=DatabaseToDo.getAppDatabase(this);
+        //db.toDoDao().InsertOne(new ToDo("Yemek yap","12.10.2014","15.00"));
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -38,6 +41,7 @@ public class AddTodo extends AppCompatActivity {
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_YEAR, day);
                 dateToEditText(calendar);
+
             }
         };
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -82,7 +86,9 @@ public class AddTodo extends AppCompatActivity {
         timeEditText.setText(formatter.format(date1));
     }
 
-    ;
+    private void AddtoDb(ToDo toDo){
+        db.toDoDao().InsertOne(toDo);
+    }
 }
 /*
 TimePickerDialog pickerDialog= new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
