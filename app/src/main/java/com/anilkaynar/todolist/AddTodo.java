@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,7 +78,8 @@ public class AddTodo extends AppCompatActivity {
 
     private void timeToEditText(Calendar timeCalendar) {
         Date date1=timec.getTime();
-        timeEditText.setText(""+date1.getTime());
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        timeEditText.setText(formatter.format(date1));
     }
 
     ;

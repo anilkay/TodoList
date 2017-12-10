@@ -49,6 +49,6 @@
         android:clickable="true"
         android:ems="10"
         android:inputType="time"
-        android:text="Saat" />
+        android:text="00:01" />
 
 </LinearLayout>
