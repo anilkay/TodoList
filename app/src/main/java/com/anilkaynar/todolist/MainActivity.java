@@ -1,12 +1,14 @@
 package com.anilkaynar.todolist;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Calendar;
 
+public class MainActivity extends AppCompatActivity {
+Calendar cal=Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,5 +18,16 @@ public class MainActivity extends AppCompatActivity {
     public void add(View v){
         Intent i=new Intent(this,AddTodo.class);
         startActivity(i);
+
     }
 }
+/*
+TimePickerDialog pickerDialog= new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                Log.i("SEn",i+" "+i1);
+            }
+        },
+                cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+        pickerDialog.show();
+ */
