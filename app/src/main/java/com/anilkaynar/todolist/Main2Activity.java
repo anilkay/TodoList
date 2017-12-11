@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 public class Main2Activity extends AppCompatActivity {
     DatabaseToDo db;
     ListView listView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,14 +26,20 @@ public class Main2Activity extends AppCompatActivity {
         listView = findViewById(R.id.listviewMain);
         TodoAdapter adapter = new TodoAdapter(this, all);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e("Şekil", "Başlandı mevzuya");
+                getApplication().getContentResolver().notifyChange(null, null);
+
+            }
+        });
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(getApplicationContext(), AddTodo.class), 1);
-
             }
         });
     }
-
 }

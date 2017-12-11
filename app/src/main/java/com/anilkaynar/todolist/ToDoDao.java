@@ -1,5 +1,6 @@
 package com.anilkaynar.todolist;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -20,4 +21,7 @@ public interface ToDoDao {
     void InsertOne(ToDo todo);
     @Delete
     void DeleteOne(ToDo todo);
+
+    @Query("Select*from todo")
+    LiveData<List<ToDo>> getLiveMevzu();
 }

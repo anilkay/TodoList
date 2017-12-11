@@ -29,10 +29,11 @@ public class AddTodo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
-        dateEditText = (EditText) findViewById(R.id.date);
-        timeEditText = (EditText) findViewById(R.id.editTime);
+        dateEditText = findViewById(R.id.date);
+        timeEditText = findViewById(R.id.editTime);
         db=DatabaseToDo.getAppDatabase(this);
         //db.toDoDao().InsertOne(new ToDo("Yemek yap","12.10.2014","15.00"));
+        db.toDoDao().InsertOne(new ToDo("Kalem al", "12.10.2015", "15.30"));
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -41,7 +42,6 @@ public class AddTodo extends AppCompatActivity {
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_YEAR, day);
                 dateToEditText(calendar);
-
             }
         };
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
