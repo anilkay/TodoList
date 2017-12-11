@@ -20,6 +20,10 @@ Calendar cal=Calendar.getInstance();
         startActivity(i);
 
     }
+
+    public void getMainActivity(View v) {
+        startActivity(new Intent(this, Main2Activity.class));
+    }
 }
 /*
 TimePickerDialog pickerDialog= new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {

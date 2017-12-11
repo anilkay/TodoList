@@ -26,17 +26,17 @@ public class TodoAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return toDoArrayList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return toDoArrayList.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
