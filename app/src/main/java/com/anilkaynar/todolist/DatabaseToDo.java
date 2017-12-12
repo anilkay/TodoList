@@ -7,16 +7,17 @@ import android.content.Context;
 /**
  * Created by anilkaynar on 11.12.2017.
  */
-@android.arch.persistence.room.Database(entities = {ToDo.class},version = 1)
+@android.arch.persistence.room.Database(entities = {ToDo.class}, version = 3)
 public abstract class DatabaseToDo extends RoomDatabase {
     private static   DatabaseToDo Singleton;
 
     public static DatabaseToDo getAppDatabase(Context context) {
         if (Singleton == null) {
             Singleton =
-                    (DatabaseToDo) Room.databaseBuilder(context.getApplicationContext(),DatabaseToDo.class,"TodoDb")
+                    Room.databaseBuilder(context.getApplicationContext(), DatabaseToDo.class, "TodoDb")
                             // allow queries on the main thread.
                             .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build();
         }
         return Singleton;

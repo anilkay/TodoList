@@ -13,8 +13,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+class CompareTodo implements Comparator<ToDo> {
+
+    @Override
+    public int compare(ToDo toDo, ToDo t1) {
+        if (toDo.priority >= t1.priority) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+}
 public class Main2Activity extends AppCompatActivity {
     DatabaseToDo db;
     ListView listView;
@@ -27,15 +40,14 @@ public class Main2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         db = DatabaseToDo.getAppDatabase(this);
         all = (ArrayList<ToDo>) db.toDoDao().getAll();
-
         listView = findViewById(R.id.listviewMain);
         LiveData<List<ToDo>> all2 = db.toDoDao().getLiveMevzu();
         final TodoAdapter adapter = new TodoAdapter(this, all);
         listView.setAdapter(adapter);
-
         ToDoViewModel vi = ViewModelProviders.of(this).get(ToDoViewModel.class);
         vi.getAllTodos().observe(this, listlive -> {
             listView.invalidate();
+            Collections.sort(listlive, new CompareTodo());
             TodoAdapter adapter1 = new TodoAdapter(Main2Activity.this, (ArrayList<ToDo>) listlive);
             listView.setAdapter(adapter1);
         });
@@ -60,4 +72,5 @@ public class Main2Activity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
+
 }
