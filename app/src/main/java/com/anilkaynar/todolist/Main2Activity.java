@@ -1,5 +1,7 @@
 package com.anilkaynar.todolist;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,10 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
     DatabaseToDo db;
     ListView listView;
+    ArrayList<ToDo> all;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,10 +26,19 @@ public class Main2Activity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         db = DatabaseToDo.getAppDatabase(this);
-        ArrayList<ToDo> all = (ArrayList<ToDo>) db.toDoDao().getAll();
+        all = (ArrayList<ToDo>) db.toDoDao().getAll();
+
         listView = findViewById(R.id.listviewMain);
-        TodoAdapter adapter = new TodoAdapter(this, all);
+        LiveData<List<ToDo>> all2 = db.toDoDao().getLiveMevzu();
+        final TodoAdapter adapter = new TodoAdapter(this, all);
         listView.setAdapter(adapter);
+
+        ToDoViewModel vi = ViewModelProviders.of(this).get(ToDoViewModel.class);
+        vi.getAllTodos().observe(this, listlive -> {
+            listView.invalidate();
+            TodoAdapter adapter1 = new TodoAdapter(Main2Activity.this, (ArrayList<ToDo>) listlive);
+            listView.setAdapter(adapter1);
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -41,5 +54,10 @@ public class Main2Activity extends AppCompatActivity {
                 startActivityForResult(new Intent(getApplicationContext(), AddTodo.class), 1);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }

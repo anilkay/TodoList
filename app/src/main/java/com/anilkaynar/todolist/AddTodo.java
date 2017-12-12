@@ -2,6 +2,7 @@ package com.anilkaynar.todolist;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -32,6 +33,10 @@ public class AddTodo extends AppCompatActivity {
         dateEditText = findViewById(R.id.date);
         timeEditText = findViewById(R.id.editTime);
         db=DatabaseToDo.getAppDatabase(this);
+        ToDoViewModel vi = ViewModelProviders.of(this).get(ToDoViewModel.class);
+        vi.getAllTodos().observe(this, listlive -> {
+
+        });
         //db.toDoDao().InsertOne(new ToDo("Yemek yap","12.10.2014","15.00"));
         db.toDoDao().InsertOne(new ToDo("Kalem al", "12.10.2015", "15.30"));
         date = new DatePickerDialog.OnDateSetListener() {
@@ -88,6 +93,12 @@ public class AddTodo extends AppCompatActivity {
 
     private void AddtoDb(ToDo toDo){
         db.toDoDao().InsertOne(toDo);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 }
 /*

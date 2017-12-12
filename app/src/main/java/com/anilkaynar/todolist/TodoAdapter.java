@@ -28,6 +28,12 @@ public class TodoAdapter extends BaseAdapter {
     }
 
     @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+
+    }
+
+    @Override
     public int getCount() {
         return toDoArrayList.size();
     }
@@ -58,6 +64,9 @@ public class TodoAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 db.toDoDao().DeleteOne(to);
+                synchronized (db) {
+                    db.notifyAll();
+                }
             }
         });
         return satir;
