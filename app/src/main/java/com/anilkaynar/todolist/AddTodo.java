@@ -1,13 +1,21 @@
 package com.anilkaynar.todolist;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,6 +33,7 @@ public class AddTodo extends AppCompatActivity {
     EditText dateEditText;
     EditText content;
     EditText timeEditText;
+    CheckBox calenderChec;
     Calendar calendar = Calendar.getInstance();
     Calendar timec = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener date;
@@ -40,6 +49,7 @@ public class AddTodo extends AppCompatActivity {
         content = findViewById(R.id.contentto);
         db = DatabaseToDo.getAppDatabase(this);
         spinner = findViewById(R.id.priorityed);
+        calenderChec = findViewById(R.id.cekbox5);
         spinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.priority_array, android.R.layout.simple_spinner_dropdown_item));
         ToDoViewModel vi = ViewModelProviders.of(this).get(ToDoViewModel.class);
         vi.getAllTodos().observe(this, listlive -> {
@@ -109,43 +119,68 @@ public class AddTodo extends AppCompatActivity {
     }
 
     public void add2Db(View v) {
+        ToDo todor = null;
         byte priority = Byte.parseByte(spinner.getSelectedItem().toString());
         if (content.getText() != null) {
             if (dateEditText.getText() != null) {
                 if (timeEditText.getText() != null) {
-                    ToDo todor = new ToDo(content.getText().toString(),
+                    todor = new ToDo(content.getText().toString(),
                             dateEditText.getText().toString(), timeEditText.getText().toString(), priority);
                     db.toDoDao().InsertOne(todor);
                 } else {
-                    ToDo todor = new ToDo(content.getText().toString(),
+                    todor = new ToDo(content.getText().toString(),
                             dateEditText.getText().toString(), "00:01", priority);
                     db.toDoDao().InsertOne(todor);
                 }
             } else {
                 if (timeEditText != null) {
-                    ToDo todor = new ToDo(content.getText().toString(),
+                    todor = new ToDo(content.getText().toString(),
                             "", timeEditText.getText().toString(), priority);
                     db.toDoDao().InsertOne(todor);
                 } else {
-                    ToDo todor = new ToDo(content.getText().toString(),
+                    todor = new ToDo(content.getText().toString(),
                             "", "00:01", priority);
                     db.toDoDao().InsertOne(todor);
                 }
             }
 
         }
-        startActivity(new Intent(this, Main2Activity.class));
+        if (calenderChec.isChecked()) {
+            addToGoogleCalender(todor);
+        }
     }
 
-    public ToDo addToGoogleCalender(ToDo tudor, boolean bir) {
-        if (bir) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("Resultcode", "Add to me" + resultCode);
+        startActivity(new Intent(this, Main2Activity.class));
+
+
+    }
+
+    public void addToGoogleCalender(ToDo tudor) {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 2);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_INSERT);
+            Uri uri = CalendarContract.Events.CONTENT_URI;
+            intent.setData(uri);
+            intent.putExtra(CalendarContract.Events.TITLE, "todo" + tudor.tarih)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, tudor.zaman)
+                    .putExtra(CalendarContract.Events.DESCRIPTION, tudor.metin);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, 1);
+            }
+            //startActivity(new Intent(this, Main2Activity.class));
+
+        }
             /*Intent calenderintent = new Intent(Intent.ACTION_EDIT);
             calenderintent.setType("vnd.android.cursor.item/event");
             calenderintent.putExtra("hey", 1);
             */
 
-        }
-        return tudor;
+
     }
 }
 /*
