@@ -1,11 +1,16 @@
 package com.anilkaynar.todolist;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -60,6 +65,18 @@ public class TodoAdapter extends BaseAdapter {
         content.setText(to.metin);
         tarih.setText(to.tarih);
         saat.setText(to.zaman);
+        Button sendsms = satir.findViewById(R.id.sendsmsbut);
+        sendsms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 1);
+                String smscontent = to.metin + "\n" + to.tarih;
+                Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+                sendIntent.setData(Uri.parse("smsto:"));
+                sendIntent.putExtra("sms_body", smscontent);
+                activity.startActivity(sendIntent); //Sms issie work fine now
+            }
+        });
         c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
