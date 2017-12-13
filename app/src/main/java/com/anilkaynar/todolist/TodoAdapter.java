@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by anilkaynar on 11.12.2017.
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 
 public class TodoAdapter extends BaseAdapter {
     ArrayList<ToDo> toDoArrayList;
+    TextToSpeech textToSpeech;
     LayoutInflater layoutInflater;
     Activity activity;
     DatabaseToDo db;
@@ -29,6 +34,16 @@ public class TodoAdapter extends BaseAdapter {
         layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         toDoArrayList = arrayList;
         this.activity = activity;
+        textToSpeech = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.ERROR) {
+                    Toast.makeText(activity, "Can't use Text to Speech", Toast.LENGTH_SHORT);
+                } else {
+                    textToSpeech.setLanguage(Locale.getDefault());
+                }
+            }
+        });
         db = DatabaseToDo.getAppDatabase(activity.getApplicationContext());
     }
 
@@ -64,6 +79,15 @@ public class TodoAdapter extends BaseAdapter {
         TextView saat = satir.findViewById(R.id.saat);
         content.setText(to.metin);
         tarih.setText(to.tarih);
+        tarih.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(activity, "Lolilop lolipop", Toast.LENGTH_LONG).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    textToSpeech.speak(to.metin, TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+            }
+        });
         saat.setText(to.zaman);
         Button sendsms = satir.findViewById(R.id.sendsmsbut);
         sendsms.setOnClickListener(new View.OnClickListener() {
