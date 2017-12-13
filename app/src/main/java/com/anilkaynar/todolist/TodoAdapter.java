@@ -77,8 +77,12 @@ public class TodoAdapter extends BaseAdapter {
         TextView content = satir.findViewById(R.id.content1);
         TextView tarih = satir.findViewById(R.id.tarih);
         TextView saat = satir.findViewById(R.id.saat);
-        content.setText(to.metin);
-        tarih.setText(to.tarih);
+        if (to.metin != null) {
+            content.setText(to.metin);
+        }
+        if (to.tarih != null) {
+            tarih.setText(to.tarih);
+        }
         tarih.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

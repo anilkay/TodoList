@@ -2,14 +2,19 @@ package com.anilkaynar.todolist;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +28,9 @@ import android.widget.TimePicker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -39,11 +47,14 @@ public class AddTodo extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener date;
     TimePickerDialog.OnTimeSetListener timeSetListener;
     TimePickerDialog pickerDialog;
-
+    NotificationManager notificationManager;
+    NotificationCompat.Builder notificationBuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         dateEditText = findViewById(R.id.date);
         timeEditText = findViewById(R.id.editTime);
         content = findViewById(R.id.contentto);
@@ -69,7 +80,10 @@ public class AddTodo extends AppCompatActivity {
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                timec.set(Calendar.HOUR, Calendar.MINUTE);
+                timec.set(Calendar.HOUR, hour);
+                timec.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.HOUR, hour);
+                calendar.set(Calendar.MINUTE, minute);
                 timeToEditText(timec);
             }
         };
@@ -97,6 +111,7 @@ public class AddTodo extends AppCompatActivity {
     }
 
     private void dateToEditText(Calendar calender1) {
+
         String dateFormat = "DD/MM/YYYY";
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         dateEditText.setText(format.format(calender1.getTime()));
@@ -121,6 +136,7 @@ public class AddTodo extends AppCompatActivity {
     public void add2Db(View v) {
         ToDo todor = null;
         byte priority = Byte.parseByte(spinner.getSelectedItem().toString());
+
         if (content.getText() != null) {
             if (dateEditText.getText() != null) {
                 if (timeEditText.getText() != null) {
@@ -145,8 +161,31 @@ public class AddTodo extends AppCompatActivity {
             }
 
         }
+        LocalDate date = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            date = calendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalTime localTime = timec.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+            Date deneme = calendar.getTime();
+            deneme.setHours(timec.getTime().getHours());
+            deneme.setMinutes(timec.getTime().getMinutes());
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel = new NotificationChannel("4444", "Todoapp", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(notificationChannel);
+            Notification notification = new NotificationCompat.Builder(this, notificationChannel.getId())
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentText(todor.metin)
+                    .setContentTitle("What TO DO")
+                    .setPriority(todor.priority)
+                    .setGroup("444")
+                    .setWhen(calendar.getTimeInMillis())
+                    .build();
+            Log.e("Mevzudur", "" + calendar.getTimeInMillis());
+            notificationManager.notify(444, notification);
+        }
         if (calenderChec.isChecked()) {
             addToGoogleCalender(todor);
+        } else {
+            startActivity(new Intent(this, Main2Activity.class));
         }
     }
 

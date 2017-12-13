@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/android_list_view_tutorial_with_example"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="7dp">
 
-    <CheckBox
-        android:id="@+id/cekbox"
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:orientation="vertical"
+        android:padding="7dp">
 
-    <TextView
-        android:id="@+id/content1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="6"
-        android:text="Yemek yapın"
-        android:textSize="16dp" />
+        <CheckBox
+            android:id="@+id/cekbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/content1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tarih"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:text="23/07/2014"
-        android:textSize="16dp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/saat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="16.50"
-        android:textSize="16dp" />
+        android:text="23/07/2014"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/sendsmsbut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
         android:text="Send Sms" />
-
 </LinearLayout>

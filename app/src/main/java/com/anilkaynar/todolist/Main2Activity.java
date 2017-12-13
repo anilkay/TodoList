@@ -110,7 +110,8 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 4) {
+        Log.e("Result code", "Result Code" + resultCode);
+        if (requestCode == 4 && resultCode != 0) { //Problem Solved.
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             db.toDoDao().InsertOne(new ToDo(result.get(0), "1.1.2018", "00.00", Byte.parseByte("9")));
         }
