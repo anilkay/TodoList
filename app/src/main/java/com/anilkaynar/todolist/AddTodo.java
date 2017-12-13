@@ -182,6 +182,26 @@ public class AddTodo extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("metinEditText", content.getText().toString());
+        outState.putString("timeEditText", timeEditText.getText().toString());
+        outState.putString("dateEditText", dateEditText.getText().toString());
+        outState.putBoolean("calendercheck", calenderChec.isChecked());
+        outState.putInt("priority", spinner.getSelectedItemPosition());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        content.setText(savedInstanceState.getString("metinEditText"));
+        timeEditText.setText(savedInstanceState.getString("timeEditText"));
+        dateEditText.setText(savedInstanceState.getString("dateEditText"));
+        calenderChec.setChecked(savedInstanceState.getBoolean("calendercheck"));
+        spinner.setSelection(savedInstanceState.getInt("priority"));
+    }
 }
 /*
 TimePickerDialog pickerDialog= new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
