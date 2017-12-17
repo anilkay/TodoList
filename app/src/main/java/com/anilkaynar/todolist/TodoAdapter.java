@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,7 @@ public class TodoAdapter extends BaseAdapter {
         tarih.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activity, "Lolilop lolipop", Toast.LENGTH_LONG).show();
+                // Toast.makeText(activity, "Lolilop lolipop", Toast.LENGTH_LONG).show();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     textToSpeech.speak(to.metin, TextToSpeech.QUEUE_FLUSH, null, null);
                 }
@@ -108,7 +109,10 @@ public class TodoAdapter extends BaseAdapter {
         c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.toDoDao().DeleteOne(to);
+                new Thread(() -> {
+                    Log.e("This is fucking error", "İsn't it");
+                    db.toDoDao().DeleteOne(to);
+                }).start();
                 synchronized (db) {
                     db.notifyAll();
                 }

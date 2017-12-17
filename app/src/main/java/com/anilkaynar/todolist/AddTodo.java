@@ -1,10 +1,12 @@
 package com.anilkaynar.todolist;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -27,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -73,7 +76,7 @@ public class AddTodo extends AppCompatActivity {
                 //  calendar.set(year,month,day);
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_YEAR, day);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
                 dateToEditText(calendar);
             }
         };
@@ -133,7 +136,7 @@ public class AddTodo extends AppCompatActivity {
 
     }
 
-    public void add2Db(View v) {
+    public void add2Db(View v) throws ParseException {
         ToDo todor = null;
         byte priority = Byte.parseByte(spinner.getSelectedItem().toString());
 
@@ -171,14 +174,20 @@ public class AddTodo extends AppCompatActivity {
             notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             NotificationChannel notificationChannel = new NotificationChannel("4444", "Todoapp", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(notificationChannel);
+            Intent intent = new Intent(this, Main2Activity.class);
+            PendingIntent activity = PendingIntent.getActivity(this, 444, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             Notification notification = new NotificationCompat.Builder(this, notificationChannel.getId())
                     .setSmallIcon(R.drawable.ic_launcher_background)
                     .setContentText(todor.metin)
                     .setContentTitle("What TO DO")
                     .setPriority(todor.priority)
                     .setGroup("444")
+                    .setShowWhen(true)
                     .setWhen(calendar.getTimeInMillis())
+                    .setContentIntent(activity)
                     .build();
+            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), activity);
             Log.e("Mevzudur", "" + calendar.getTimeInMillis());
             notificationManager.notify(444, notification);
         }
@@ -198,16 +207,19 @@ public class AddTodo extends AppCompatActivity {
 
     }
 
-    public void addToGoogleCalender(ToDo tudor) {
+    public void addToGoogleCalender(ToDo tudor) throws ParseException {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 2);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(Intent.ACTION_INSERT);
             Uri uri = CalendarContract.Events.CONTENT_URI;
             intent.setData(uri);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD/MM/YYYY", Locale.US);
+            Log.e("Timed Exception", simpleDateFormat.parse(tudor.tarih).getTime() + " " + tudor.tarih);
+
             intent.putExtra(CalendarContract.Events.TITLE, "todo" + tudor.tarih)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, tudor.zaman)
-                    .putExtra(CalendarContract.Events.DESCRIPTION, tudor.metin);
+                    .putExtra(CalendarContract.Events.DESCRIPTION, tudor.metin)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, simpleDateFormat.parse(tudor.tarih).getTime());
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, 1);
             }

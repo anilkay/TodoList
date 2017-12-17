@@ -34,12 +34,14 @@ class CompareTodo implements Comparator<ToDo> {
         }
     }
 }
+
 public class Main2Activity extends AppCompatActivity {
     DatabaseToDo db;
     TextToSpeech textToSpeech;
     ListView listView;
     ArrayList<ToDo> all;
     ArrayList<ToDo> forTextToSpeech;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +115,10 @@ public class Main2Activity extends AppCompatActivity {
         Log.e("Result code", "Result Code" + resultCode);
         if (requestCode == 4 && resultCode != 0) { //Problem Solved.
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            db.toDoDao().InsertOne(new ToDo(result.get(0), "1.1.2018", "00.00", Byte.parseByte("9")));
+            new Thread(() -> {
+                db.toDoDao().InsertOne(new ToDo(result.get(0), "1.1.2018", "00.00", Byte.parseByte("9")));
+            }
+            ).start();
         }
     }
 
