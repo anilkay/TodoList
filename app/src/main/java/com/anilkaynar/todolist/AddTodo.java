@@ -217,12 +217,13 @@ public class AddTodo extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_INSERT);
             Uri uri = CalendarContract.Events.CONTENT_URI;
             intent.setData(uri);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD/MM/YYYY", Locale.US);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YYYY", Locale.US);
             Log.e("Timed Exception", simpleDateFormat.parse(tudor.tarih).getTime() + " " + tudor.tarih);
 
             intent.putExtra(CalendarContract.Events.TITLE, "todo" + tudor.tarih)
                     .putExtra(CalendarContract.Events.DESCRIPTION, tudor.metin)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, simpleDateFormat.parse(tudor.tarih).getTime());
+                    // .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, simpleDateFormat.parse(tudor.tarih).getTime());
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, 1);
             }
