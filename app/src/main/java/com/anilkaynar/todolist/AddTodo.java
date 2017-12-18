@@ -69,7 +69,7 @@ public class AddTodo extends AppCompatActivity {
         vi.getAllTodos().observe(this, listlive -> {
         });
         //db.toDoDao().InsertOne(new ToDo("Yemek yap","12.10.2014","15.00"));
-        db.toDoDao().InsertOne(new ToDo("Kalem al", "12.10.2015", "15.30", Byte.parseByte("6")));
+        //db.toDoDao().InsertOne(new ToDo("Kalem al", "12/10/2015", "15.30", Byte.parseByte("6")));
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -219,7 +219,6 @@ public class AddTodo extends AppCompatActivity {
             intent.setData(uri);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YYYY", Locale.US);
             Log.e("Timed Exception", simpleDateFormat.parse(tudor.tarih).getTime() + " " + tudor.tarih);
-
             intent.putExtra(CalendarContract.Events.TITLE, "todo" + tudor.tarih)
                     .putExtra(CalendarContract.Events.DESCRIPTION, tudor.metin)
                     // .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, simpleDateFormat.parse(tudor.tarih).getTime());
