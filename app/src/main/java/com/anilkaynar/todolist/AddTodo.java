@@ -74,9 +74,12 @@ public class AddTodo extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 //  calendar.set(year,month,day);
+                //  calendar.set(year,month,day);
+                // Calendar calendar2 = new GregorianCalendar(year,month,day);
                 calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
+                calendar.set(Calendar.MONTH, month);
+                Log.e("Günler anadoluya", day + " ");
                 dateToEditText(calendar);
             }
         };
@@ -115,7 +118,7 @@ public class AddTodo extends AppCompatActivity {
 
     private void dateToEditText(Calendar calender1) {
 
-        String dateFormat = "DD/MM/YYYY";
+        String dateFormat = "dd/MM/YYYY";
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         dateEditText.setText(format.format(calender1.getTime()));
     }
